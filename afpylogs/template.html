@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Logs du chan #afpy pour le %(date)s</title>
+        <style type="text/css">
+            .barket {color: #ccc;}
+            .nick {color: #8A6642;}
+            .action {color: #a4c;}
+            #logs_navigation dt.active a {
+                color: rgb(117, 173, 10);
+            }
+            #logs_navigation dd a.active {
+                font-weight: bold;
+                color: rgb(117, 173, 10);
+            }
+            
+        </style>
+        %(stylesheets)s
+    </head>
+    
+    <body>
+        <div id="visual-portal-wrapper">
+          %(header)s
+          <div id="portal-columns" class="row">
+              <div id="portal-column-content" class="cell width-3:4 position-1:4">
+                <div id="letters"></div>
+                <div id="contents">
+                    %(body)s
+                </div>
+              </div>
+              <div id="portal-column-one" class="cell width-1:4 position-0">
+                <div id="logs_navigation">%(archives)s</div>
+              </div>
+          </div>
+        </div>
+        <script src="/jquery.js" type="text/javascript"></script>
+        <script src="/transcript.js" type="text/javascript"></script>
+    </body>
+</html>
