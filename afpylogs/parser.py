@@ -3,7 +3,7 @@ import re
 import codecs
 from collections import namedtuple
 from datetime import time
-from cgi import escape
+from html import escape
 
 IRCLine = namedtuple('IRCLine', ['timestamp', 'nick', 'message'])
 
@@ -72,10 +72,10 @@ def parse_line(line):
 
 def parse(channel, path, encoding='utf-8'):
     """Turn an irssi log line into HTML, URLs are converted to <a>.
-    
+
     Normal lines look like this:
     09:42 < bmispelon> this is the message
-    
+
     Some lines are "action" ones (usually, the result of a "/me ... command")
     and look like this:
     09:42 [#] this is the message
