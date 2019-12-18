@@ -6,9 +6,14 @@ We use a global variable as the document as a poor man's cache.
 from pyquery import PyQuery
 
 
-document = PyQuery(url='http://www.afpy.org')
+document = PyQuery(url='https://www.afpy.org')
 # Remove some stuff we don't want
 document('#portal-searchbox, #portal-personaltools-wrapper').remove()
+
+def as_absolute(html):
+    for attr in 'href', 'src':
+        html = html.replace(f'{attr}="/', f'{attr}="https://afpy.org/')
+    return html
 
 def get_stylesheets():
     """
@@ -16,13 +21,12 @@ def get_stylesheets():
     """
     global document
     STYLESHEET_SELECTOR = 'head style, head link[@rel=stylesheet]'
-    return '\n'.join(str(elt) for elt in document(STYLESHEET_SELECTOR).items())
+    return as_absolute('\n'.join(str(elt) for elt in document(STYLESHEET_SELECTOR).items()))
 
 def get_header():
     """
     The navigation menu as a string.
     """
     global document
-    HEADER_SELECTOR = '#portal-top'
-    return str(document(HEADER_SELECTOR))
-
+    HEADER_SELECTOR = 'nav.menu'
+    return as_absolute(str(document(HEADER_SELECTOR)))
