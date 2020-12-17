@@ -1,20 +1,14 @@
 # AfpyLogs
 
-Web view of IRC logs from #python-fr channel on Freenode.
+Web view of IRC logs from #afpy channel on Freenode.
 
 
 ## Installing
 
-    pip install -e .
-
-
-## Testing
-
-    pip install -e .[test]
-    pytest
+    pip install -r requirements.txt
 
 
 ## Running
 
-    gunicorn --workers 2 --bind unix:afpylogs.sock -m 007 server
+    gunicorn --workers 2 --bind 0.0.0.0:8000 app
 

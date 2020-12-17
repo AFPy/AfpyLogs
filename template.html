@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Logs du chan #afpy pour le </title>
+        <style type="text/css">
+            body {background-color: #000; color: #fff; font-family: "Verdana"}
+            .time {color: #ffd738; font-size: .9em; font-weight: bold}
+            .bracket {color: #ccc; font-size: .8em}
+            .nick {color: #dAa642}
+            .message {color: #eaeaea}
+            .action {color: #a4c}
+            .click {cursor: pointer}
+            .off {display: none}
+            .on {display: block}
+            #content a {color: #ffd738; font-size: .9em; font-weight: bold; text-decoration: none}
+            #content a:hover {text-decoration: underline}
+            .calendar {color: #ffd738}
+            .day {font-weight: bold}
+            #calendar {padding-bottom: .6em; margin-bottom: .6em; border-bottom: 1px dashed #ffd738}
+            #calendar a {color: #ffd738; text-decoration: none}
+            #calendar a:hover {text-decoration: underline}
+        </style>
+        <script type="text/javascript">
+        function hide(id) {
+            var els = document.getElementsByClassName("on");
+            [].forEach.call(els, function (el){
+                console.log(el.id);
+                console.log(id);
+                console.log(id.substr(0, el.id.length));
+                console.log(id.substr(0, el.id.length) != el.id);
+                if (el.id != id.substr(0, el.id.length)) {
+                    el.className = "off";
+                }
+            });
+        }
+
+        function display(id) {
+            hide(id.toString());
+            var el = document.getElementById(id);
+            if (el!=null) {
+                el.className = "on";
+            }
+        }
+        </script>
+    </head>
+    <body>
+        <div id="calendar">
+        <nav>
+        {% for year in g.dates.years %}
+        <span onclick="display('{{ year }}')" class="calendar click {%if year==g.year%}day{%endif%}">{{ year }}</span>
+        {% endfor %}
+        </nav>
+        {% for year in g.dates.years %}
+        <nav id="{{year}}" class="{%if year==g.year%}on{%else%}off{%endif%}">
+            {% for month in g.dates.months[year] %}
+            <span onclick="display('{{ year }}{{ month }}')" class="calendar click {%if year==g.year and month==g.month%}day{%endif%}">{{ month }}</span>
+            {% endfor %}
+            {% for month in g.dates.months[year] %}
+            <nav id="{{year}}{{month}}" class="{%if year==g.year and month==g.month%}on{%else%}off{%endif%}">
+                {% for day in g.dates.days[year+month] %}
+                <a href="{{url_for('archives', year=year, month=month, day=day)}}" class="calendar {%if year==g.year and month==g.month and day==g.day%}day{%endif%}">{{ day }}</a>
+                {% endfor %}
+            </nav>
+            {% endfor %}
+        </nav>
+        {% endfor %}
+        </div>
+        <div id="content">
+        {% for line in g.lines %}
+        <span class="time">{{ line.time }}</span> <span class="bracket">&lt;</span><span class="nick">{{ line.nick }}</span><span class="bracket">&gt;</span> <span class="message">{{ line.message |safe }}</span><br />
+        {% endfor %}
+        </div>
+    </body>
+</html>
