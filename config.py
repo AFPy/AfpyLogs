@@ -7,7 +7,7 @@ JINJA_ENV = {
     "LSTRIP_BLOCKS": True,
 }
 
-LOG_PATH = "../logs.afpy.org"
+LOG_PATH = "/var/www/logs.afpy.org"
 
 # IRSSI log pattern
 DATE_FORMAT = "(\d+-\d+-\d+ )?(?P<time>\d\d:\d\d)"
