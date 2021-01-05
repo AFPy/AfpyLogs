@@ -16,8 +16,11 @@ LOG_PATTERN = r"^%s\s+[<*]\s*(?P<nick>[^> ]+)[> ]\s+(?P<message>.*)$" % DATE_FOR
 # Patterns
 LINK_PATTERN = r"https?://\S+"
 BOLD_PATTERN = r"\*[^\*\s]+\*"
+SAFE_LT_PATTERN = r"<"
+SAFE_GT_PATTERN = r">"
 
 # html
 LINK_HTML = '<a href="{link}">{link}</a>'
 BOLD_HTML = "<b>{text}</b>"
-
+SAFE_LT_HTML = "&lt;"
+SAFE_GT_HTML = "&gt;"
