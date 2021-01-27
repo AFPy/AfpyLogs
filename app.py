@@ -47,17 +47,13 @@ def archives(year=None, month=None, day=None):
     # Récupération des fichiers disponibles
     archives, g.dates = get_archives()
     # Récupération de la date souhaitée
-    if year is None or month is None or day is None:
-        # Si date mal ou non fournie, on prend la dernière existante
+    if year is None or month is None or day is None or [year, month, day] not in archives:
+        # Si date mal ou non fournie ou inexistante, on prend la dernière
         year = archives[-1][0]
         month = archives[-1][1]
         day = archives[-1][2]
         # Et on redirige proprement
         return redirect(url_for("archives", year=year, month=month, day=day))
-    # On vérifie que le tuple existe
-    if [year, month, day] not in archives:
-        # TODO: Renvoyer une 404 ou mettre un message d'erreur ?
-        return "404"
     # Ok, on charge et on affiche le contenu du fichier
     filename = "log-%s-%s-%s.txt" % (year, month, day)
     filepath = os.path.join(application.config["LOG_PATH"], filename)
