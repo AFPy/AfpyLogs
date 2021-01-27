@@ -18,6 +18,8 @@ application.jinja_env.lstrip_blocks = application.config["JINJA_ENV"]["LSTRIP_BL
 LOG_PATTERN = re.compile(application.config["LOG_PATTERN"])
 LINK_PATTERN = re.compile(application.config["LINK_PATTERN"])
 BOLD_PATTERN = re.compile(application.config["BOLD_PATTERN"])
+SAFE_LT_PATTERN = re.compile(application.config["SAFE_LT_PATTERN"])
+SAFE_GT_PATTERN = re.compile(application.config["SAFE_GT_PATTERN"])
 
 
 def get_archives():
@@ -59,7 +61,7 @@ def archives(year=None, month=None, day=None):
     # Ok, on charge et on affiche le contenu du fichier
     filename = "log-%s-%s-%s.txt" % (year, month, day)
     filepath = os.path.join(application.config["LOG_PATH"], filename)
-    with open(filepath) as f:
+    with open(filepath, encoding="utf-8") as f:
         lines = f.read().splitlines()
     g.lines = []
     g.year, g.month, g.day = year, month, day
@@ -67,6 +69,14 @@ def archives(year=None, month=None, day=None):
         result = LOG_PATTERN.match(line)
         if result is not None:
             message = result.group("message")
+            for text in SAFE_GT_PATTERN.findall(message):
+                message = message.replace(
+                    text, application.config["SAFE_GT_HTML"].format(text=text)
+                )
+            for text in SAFE_LT_PATTERN.findall(message):
+                message = message.replace(
+                    text, application.config["SAFE_LT_HTML"].format(text=text)
+                )
             for link in LINK_PATTERN.findall(message):
                 message = message.replace(
                     link, application.config["LINK_HTML"].format(link=link)

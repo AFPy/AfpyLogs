@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Logs du chan #afpy pour le </title>
         <style type="text/css">
             body {background-color: #000; color: #fff; font-family: "Verdana"}
@@ -67,7 +69,7 @@
         </div>
         <div id="content">
         {% for line in g.lines %}
-        <span class="time">{{ line.time }}</span> <span class="bracket">&lt;</span><span class="nick">{{ line.nick }}</span><span class="bracket">&gt;</span> <span class="message">{{ line.message |safe }}</span><br />
+        <span class="time">{{ line.time }}</span> <span class="bracket">&lt;</span><span class="nick">{{ line.nick }}</span><span class="bracket">&gt;</span> <span class="message">{{ line.message|safe }}</span><br />
         {% endfor %}
         </div>
     </body>
