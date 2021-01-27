@@ -8,6 +8,10 @@ from flask import Flask, g, redirect, render_template, url_for
 
 application = Flask(__name__, template_folder=".")
 application.config.from_object("config")
+try:
+    application.config.from_object(f"config-{application.config['ENV']}")
+except Exception as e:
+    print(f"Starting without specific configuration file config-{application.config['ENV']}.py")
 application.jinja_env.trim_blocks = application.config["JINJA_ENV"]["TRIM_BLOCKS"]
 application.jinja_env.lstrip_blocks = application.config["JINJA_ENV"]["LSTRIP_BLOCKS"]
 
