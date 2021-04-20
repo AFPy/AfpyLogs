@@ -3,6 +3,8 @@
 import os
 import re
 
+from bleach import Cleaner
+from bleach.linkifier import LinkifyFilter
 from flask import Flask, g, redirect, render_template, url_for
 
 
@@ -11,15 +13,14 @@ application.config.from_object("config")
 try:
     application.config.from_object(f"config-{application.config['ENV']}")
 except Exception as e:
-    print(f"Starting without specific configuration file config-{application.config['ENV']}.py")
+    print(
+        "Starting without specific configuration"
+        f"file config-{application.config['ENV']}.py"
+    )
 application.jinja_env.trim_blocks = application.config["JINJA_ENV"]["TRIM_BLOCKS"]
 application.jinja_env.lstrip_blocks = application.config["JINJA_ENV"]["LSTRIP_BLOCKS"]
 
 LOG_PATTERN = re.compile(application.config["LOG_PATTERN"])
-LINK_PATTERN = re.compile(application.config["LINK_PATTERN"])
-BOLD_PATTERN = re.compile(application.config["BOLD_PATTERN"])
-SAFE_LT_PATTERN = re.compile(application.config["SAFE_LT_PATTERN"])
-SAFE_GT_PATTERN = re.compile(application.config["SAFE_GT_PATTERN"])
 
 
 def get_archives():
@@ -47,7 +48,12 @@ def archives(year=None, month=None, day=None):
     # Récupération des fichiers disponibles
     archives, g.dates = get_archives()
     # Récupération de la date souhaitée
-    if year is None or month is None or day is None or [year, month, day] not in archives:
+    if (
+        year is None
+        or month is None
+        or day is None
+        or [year, month, day] not in archives
+    ):
         # Si date mal ou non fournie ou inexistante, on prend la dernière
         year = archives[-1][0]
         month = archives[-1][1]
@@ -61,26 +67,11 @@ def archives(year=None, month=None, day=None):
         lines = f.read().splitlines()
     g.lines = []
     g.year, g.month, g.day = year, month, day
+    cleaner = Cleaner(tags=["b"], filters=[LinkifyFilter])
     for line in lines:
         result = LOG_PATTERN.match(line)
         if result is not None:
-            message = result.group("message")
-            for text in SAFE_GT_PATTERN.findall(message):
-                message = message.replace(
-                    text, application.config["SAFE_GT_HTML"].format(text=text)
-                )
-            for text in SAFE_LT_PATTERN.findall(message):
-                message = message.replace(
-                    text, application.config["SAFE_LT_HTML"].format(text=text)
-                )
-            for link in LINK_PATTERN.findall(message):
-                message = message.replace(
-                    link, application.config["LINK_HTML"].format(link=link)
-                )
-            for text in BOLD_PATTERN.findall(message):
-                message = message.replace(
-                    text, application.config["BOLD_HTML"].format(text=text)
-                )
+            message = cleaner.clean(result.group("message"))
             g.lines.append(
                 {
                     "time": result.group("time"),
