@@ -21,6 +21,7 @@ application.jinja_env.trim_blocks = application.config["JINJA_ENV"]["TRIM_BLOCKS
 application.jinja_env.lstrip_blocks = application.config["JINJA_ENV"]["LSTRIP_BLOCKS"]
 
 LOG_PATTERN = re.compile(application.config["LOG_PATTERN"])
+BOLD_PATTERN = re.compile(application.config["BOLD_PATTERN"])
 
 
 def get_archives():
@@ -71,7 +72,12 @@ def archives(year=None, month=None, day=None):
     for line in lines:
         result = LOG_PATTERN.match(line)
         if result is not None:
-            message = cleaner.clean(result.group("message"))
+            message = result.group("message")
+            for text in BOLD_PATTERN.findall(message):
+                message = message.replace(
+                    text, application.config["BOLD_HTML"].format(text=text)
+                )
+            message = cleaner.clean(message)
             g.lines.append(
                 {
                     "time": result.group("time"),
