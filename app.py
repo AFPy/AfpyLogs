@@ -3,6 +3,7 @@
 import os
 import re
 
+from pathlib import Path
 from bleach import Cleaner
 from bleach.linkifier import LinkifyFilter
 from flask import Flask, g, redirect, render_template, url_for
@@ -27,8 +28,8 @@ BOLD_PATTERN = re.compile(application.config["BOLD_PATTERN"])
 def get_archives():
     archives = []
     dates = {"years": [], "months": {}, "days": {}}
-    for filename in sorted(os.listdir(application.config["LOG_PATH"])):
-        date = filename[:-4].split("-")[1:]
+    for filename in sorted(Path(application.config["LOG_PATH"]).glob("log-*-*-*.txt")):
+        date = filename.name[:-4].split("-")[1:]
         archives.append(date)
         if date[0] not in dates["years"]:
             dates["years"].append(date[0])
