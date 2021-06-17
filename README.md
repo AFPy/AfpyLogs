@@ -1,6 +1,6 @@
 # AfpyLogs
 
-Web view of IRC logs from #afpy channel on Freenode.
+Web view of IRC logs from #afpy channel on [Libera](https://libera.chat/).
 
 
 ## Installing
